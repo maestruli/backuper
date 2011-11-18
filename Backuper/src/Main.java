@@ -52,7 +52,7 @@ public class Main {
 
 		for (String folder : inputFolders) {
 			File input = new File(folder);
-			logger.info("Carpeta: " + input.getAbsolutePath());
+			logger.info("Carpeta: " + input.getName());
 
 			try {
 				String output;
