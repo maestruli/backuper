@@ -19,6 +19,7 @@ public class FileReader {
 
 	private final static Logger logger = org.apache.log4j.Logger
 			.getLogger(FileReader.class);
+	private static String LATIN_CHARSET = "ISO-8859-1";
 
 	public static List<String> inputFolders = new ArrayList<String>();
 
@@ -27,12 +28,13 @@ public class FileReader {
 		try {
 			FileInputStream inputFile = new FileInputStream(FOLDERLIST_FILE);
 			DataInputStream dis = new DataInputStream(inputFile);
-			BufferedReader br = new BufferedReader(new InputStreamReader(dis));
+			BufferedReader br = new BufferedReader(new InputStreamReader(dis,
+					LATIN_CHARSET));
 
 			String temp = "";
 
 			while ((temp = br.readLine()) != null) {
-				inputFolders.add(temp);
+				inputFolders.add(new String(temp.getBytes(), LATIN_CHARSET));
 			}
 			inputFile.close();
 		} catch (Exception e) {
