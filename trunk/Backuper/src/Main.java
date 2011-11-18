@@ -20,9 +20,13 @@ public class Main {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {
+
 		List<String> inputFolders = FileReader.getInputFolders();
 		File backupDir = new File(PropertiesUtil.getPropertie("backupFolder")
 				+ File.separator + DateUtils.getCurrentDate());
+		String compressionFormat = PropertiesUtil
+				.getPropertie("compressionFormat");
+
 		try {
 			if (backupDir.exists()) {
 				logger.info("El directorio del back ya existe");
@@ -45,17 +49,35 @@ public class Main {
 					+ e.getMessage());
 		}
 		logger.info("Iniciando backup de carpetas");
+
 		for (String folder : inputFolders) {
 			File input = new File(folder);
-			logger.info("Carpeta: " + input.getName());
-			String output = backupDir + File.separator + input.getName()
-					+ Zipper.ZIP_EXTENSION;
+			logger.info("Carpeta: " + input.getAbsolutePath());
+
 			try {
-				Zipper.createZipFile(folder, output);
+				String output;
+				if (CompressionUtils.ZIP_FORMAT
+						.equalsIgnoreCase(compressionFormat)) {
+					output = backupDir + File.separator + input.getName()
+							+ CompressionUtils.ZIP_EXTENSION;
+					CompressionUtils.createZipFile(folder, output);
+				} else {
+					if (CompressionUtils.TARGZ_FORMAT
+							.equalsIgnoreCase(compressionFormat)) {
+						output = backupDir + File.separator + input.getName()
+								+ CompressionUtils.TARGZ_EXTENSION;
+						CompressionUtils.createTarGzFile(folder, output);
+					} else {
+						logger.error("Formato de compresion no definido");
+					}
+				}
 			} catch (Exception e) {
 				logger.error("Error comprimiendo carpeta: " + folder + " : "
 						+ e.getMessage());
+				System.exit(1);
 			}
 		}
+		logger.info("Backup finalizo!");
+		System.exit(0);
 	}
 }

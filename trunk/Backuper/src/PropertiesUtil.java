@@ -26,6 +26,7 @@ public class PropertiesUtil {
 		try {
 			logger.info("Intentando abrir el archivo de configuracion...");
 			properties.load(new FileInputStream(CONFIG_FILE));
+			printProperties();
 		} catch (IOException e) {
 			logger.error("Error abriendo el archivo de configuracion: "
 					+ e.getMessage());
@@ -45,6 +46,14 @@ public class PropertiesUtil {
 			logger.info("No se encontro la Key: " + key + " en el archivo "
 					+ CONFIG_FILE);
 		}
-		return ret;
+		return ret.trim();
+	}
+
+	/**
+	 * Prints the properties.
+	 */
+	public static void printProperties() {
+		logger.info("Leyendo properties...");
+		logger.info(properties.toString());
 	}
 }
